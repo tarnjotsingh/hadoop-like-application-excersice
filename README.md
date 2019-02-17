@@ -64,3 +64,24 @@ These can be used during the **initial** development and debugging phases only.
 
 For the final stages of development (i.e. requiring error handling) use the **AComp_Passenger_data.csv** file. Thus the ‘no_error’ files are not to be used for the software runs that generate the data for the final report, to do so will result in loss of marks.
 
+## Objectives
+
+* Determine the number of flights from each airport; include a list of any airports not used.
+* Create a list of flights based on the Flight id, this output should include the passenger Id, relevant IATA/FAA codes, the departure time, the arrival time (times to be converted to HH:MM:SS format), and the flight times.
+* Calculate the number of passengers on each flight.
+* Calculate the line-of-sight (nautical) miles for each flight and the total travelled by each passenger and thus output the passenger having earned the highest air miles.
+
+## Tasks
+
+1.  For this task in the development process, develop a **non-MapReduce** executable **prototype**, (in Java, C, or C++). The objective is to develop the basic functional ‘building-blocks’ that will support the development objectives listed above, in a way that mimics something of the operation of the MapReduce/Hadoop framework. This does not mean that you have to implement a client/server infrastructure such as Hadoop! The solution may use multi-threading if this suits your particular design and implementation strategy, the marking strategy will reflect the appropriate use of: coding techniques, succinct standard and appropriate usage of Javadoc comments, data structures and overall program design. The code should be subject to command line version control using a Git repository under your university username under https://csgitlab.reading.ac.uk.
+   
+    The final results/output must use the **AComp_Passenger_data.csv** file. Error detection and handling for this task can be quite basic, but it must be robust and follow a logical, well considered strategy – the latter is entirely for you to decide.
+   
+2.  Write a brief report (no more than 7 pages for the actual content, not including title page) explaining:
+  
+    * The high-level description of the development of the prototype software.
+    * A simple description of the Git command line process undertaken.
+    * A detailed description of the MapReduce functions you are replicating.
+    * The output format of any reports that each job produces.
+    * The strategy derived to handle input data error detection/correction and/or run-time recovery.
+    * A self-appraisal of your (equivalent) MapReduce run-time software, with suggestions as to how it may be usefully improved upon. You may comment on any aspect of the development process.
