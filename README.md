@@ -30,13 +30,13 @@ Top30_airports_LatLong.csv	AComp_Passenger_data.csv
 
 The first data file contains details of passengers that have flown between airports over a certain period. The data is in a comma delimited text file, one line per record using this format:
 
-| Data                       | Format                            |
-|----------------------------|-----------------------------------|
-| Passenger ID               | *XXXnnnnXXn*                      |
-| Flight ID                  | *XXXnnnnX*                        |
-| From airport IATA/FAA code | *XXX*                             |
-| Departure time (GMT)       | *n*[10] (This is in 'epoch' time) |
-| Total flight time (mins)   | *n*[1..4]                         |
+| Data                       | Format                              |
+|----------------------------|-------------------------------------|
+| Passenger ID               | *XXXnnnnXXn*                        |
+| Flight ID                  | *XXXnnnnX*                          |
+| From airport IATA/FAA code | *XXX*                               |
+| Departure time (GMT)       | *n*\[10\] (This is in 'epoch' time) |
+| Total flight time (mins)   | *n*[1..4]                           |
 
 
 
@@ -78,7 +78,6 @@ For the final stages of development (i.e. requiring error handling) use the **AC
     The final results/output must use the **AComp_Passenger_data.csv** file. Error detection and handling for this task can be quite basic, but it must be robust and follow a logical, well considered strategy – the latter is entirely for you to decide.
    
 2.  Write a brief report (no more than 7 pages for the actual content, not including title page) explaining:
-  
     * The high-level description of the development of the prototype software.
     * A simple description of the Git command line process undertaken.
     * A detailed description of the MapReduce functions you are replicating.
