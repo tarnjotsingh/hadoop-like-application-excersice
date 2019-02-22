@@ -26,7 +26,8 @@ In the Lecture Notes tab, select as follows
 
 The coursework data includes:
 
-Top30_airports_LatLong.csv	AComp_Passenger_data.csv
+1. AComp_Passenger_data.csv 
+2. Top30_airports_LatLong.csv	
 
 The first data file contains details of passengers that have flown between airports over a certain period. The data is in a comma delimited text file, one line per record using this format:
 

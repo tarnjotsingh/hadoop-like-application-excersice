@@ -4,11 +4,22 @@
 package com.reading.gv009864.advancedcomputing;
 
 public class App {
-    public String getGreeting() {
-        return "Hello world.";
-    }
+
+    /*
+        Create a list of flights based on the Flight ID
+        Output should include passenger ID
+        <key, List<value>>
+        <FlightId, List<data>>
+     */
+
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        // I guess the first thing to do would be to take the data in and read it before carrying on
+        // Need to Map the input data to key value pairs
+        // Will just work on doing the mapping the input to key value pairs for the first part before carrying on to the other steps in the process.
+
+        // Lets take the AComp_passenger_data_no_error to figure out how we want to do the key value thing mapping thing
+        PassengerData mapper = new PassengerData(Data.PASSENGER_DATA.getClasspath());
+        System.out.println(mapper.getLines());
     }
 }
