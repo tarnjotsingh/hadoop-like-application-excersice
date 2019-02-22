@@ -1,6 +1,6 @@
 package com.reading.gv009864.advancedcomputing.strings;
 
-public enum Data {
+public enum CSV {
     PASSENGER_DATA("AComp_Passenger_data.csv"),
     PASSENGER_DATA_NO_ERROR("AComp_Passenger_data_no_error.csv"),
     PASSENGER_DATA_NO_ERROR_DATETIME("AComp_Passenger_data.csv"),
@@ -9,7 +9,7 @@ public enum Data {
     private String fileName;
     private String path;
 
-    private Data(String fileName) {
+    private CSV(String fileName) {
         this.fileName = fileName;
         this.path = "csv/" + fileName;
     }

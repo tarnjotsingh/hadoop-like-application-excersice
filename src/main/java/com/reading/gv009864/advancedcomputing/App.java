@@ -3,7 +3,9 @@
  */
 package com.reading.gv009864.advancedcomputing;
 
-import com.reading.gv009864.advancedcomputing.strings.Data;
+import com.reading.gv009864.advancedcomputing.data.AirportData;
+import com.reading.gv009864.advancedcomputing.data.PassengerData;
+import com.reading.gv009864.advancedcomputing.strings.CSV;
 
 public class App {
 
@@ -21,10 +23,10 @@ public class App {
         // Will just work on doing the mapping the input to key value pairs for the first part before carrying on to the other steps in the process.
 
         // Lets take the AComp_passenger_data_no_error to figure out how we want to do the key value thing mapping thing
-        PassengerData passenger = new PassengerData(Data.PASSENGER_DATA.getClasspath());
+        PassengerData passenger = new PassengerData(CSV.PASSENGER_DATA.getClasspath());
         System.out.println(passenger.getLines());
 
-        AirportData airport = new AirportData(Data.TOP_30.getClasspath());
+        AirportData airport = new AirportData(CSV.TOP_30.getClasspath());
         System.out.println(airport.getLines());
     }
 }

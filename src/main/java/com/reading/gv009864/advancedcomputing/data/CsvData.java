@@ -1,4 +1,4 @@
-package com.reading.gv009864.advancedcomputing;
+package com.reading.gv009864.advancedcomputing.data;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
  */
 public class CsvData {
     private Logger log = LoggerFactory.getLogger(CsvData.class);
-
 
     protected List<String[]> lines;
     protected final String DELIMITER = ",";

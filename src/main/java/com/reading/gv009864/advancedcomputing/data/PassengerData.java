@@ -1,10 +1,9 @@
-package com.reading.gv009864.advancedcomputing;
+package com.reading.gv009864.advancedcomputing.data;
 
 import com.reading.gv009864.advancedcomputing.strings.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -37,7 +36,7 @@ public class PassengerData extends CsvData{
     protected boolean validateData(String [] data) {
         // Immediately fail validation if the array does not have 6 elements.
         if(data.length != DATA_LENGTH) {
-            log.error("Data only has {} element(s), expected {}", data.length, DATA_LENGTH);
+            log.error("CSV only has {} element(s), expected {}", data.length, DATA_LENGTH);
             return false;
         }
         /*

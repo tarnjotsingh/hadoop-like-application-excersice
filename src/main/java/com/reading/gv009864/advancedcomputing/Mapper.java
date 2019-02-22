@@ -1,6 +1,6 @@
 package com.reading.gv009864.advancedcomputing;
 
-public class Reducer extends Thread {
+public class Mapper extends Thread {
 
     @Override
     public void run() {
