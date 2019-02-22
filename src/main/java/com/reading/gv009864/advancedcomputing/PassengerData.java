@@ -14,12 +14,9 @@ import java.util.regex.Pattern;
  * Class for loading an managing loading and validating passenger data for a given
  * passenger csv file.
  */
-public class PassengerData {
+public class PassengerData extends CsvData{
 
-    Logger log = LoggerFactory.getLogger(PassengerData.class);
-
-    private List<String[]> lines;
-    private final String DELIMITER = ",";
+    private Logger log = LoggerFactory.getLogger(PassengerData.class);
 
 
     private PassengerData() {}
@@ -33,48 +30,6 @@ public class PassengerData {
         return lines;
     }
 
-    /**
-     * Method for loading passenger data provided the correct classpath is provided.
-     * Private method as this does not need to be called again after loading the object.
-     *
-     * @param resourcePath CLASSPATH to the csv data file.
-     */
-    private void loadFile(String resourcePath) {
-        // Locate the resource in the classpath
-        //URL fileUrl = this.getClass().getResource(resourcePath);
-        //File f = new File(fileUrl.getFile());
-        LinkedList<String[]> data = new LinkedList<>();
-        String readLine;
-        String[] splitLine;
-
-        InputStream in = this.getClass().getResourceAsStream(resourcePath);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-        /*
-            Attempt to read the data from the csv file, provided the input stream was
-            actually opened and store the String[] by splitting.
-         */
-        try {
-            while((readLine = reader.readLine()) != null) {
-                splitLine = readLine.split(DELIMITER);
-                if(this.validateData(splitLine))
-                    data.add(splitLine);
-                else
-                    log.error("Skipping {}", readLine);
-            }
-        }
-        catch(IOException e) {
-            log.debug(e.getLocalizedMessage());
-        }
-        finally {
-            IOUtils.closeQuietly(reader);
-            IOUtils.closeQuietly(in);
-        }
-
-        //Store the data after successful read
-        this.lines = data;
-        log.info("File {} with {} lines has been loaded", resourcePath, lines.size());
-    }
 
     /**
      * Based on the passenger data, the arrays should have a size of 6.
@@ -85,7 +40,8 @@ public class PassengerData {
      * @param data String array to validate.
      * @return boolean value indicating if validation was successful or not.
     */
-    private boolean validateData(String [] data) {
+    @Override
+    protected boolean validateData(String [] data) {
         // Immediately fail validation if the array does not have 6 elements.
         if(data.length != 6) {
             return false;
@@ -118,5 +74,4 @@ public class PassengerData {
 
         return true;
     }
-
 }
