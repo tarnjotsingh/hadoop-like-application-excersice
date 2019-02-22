@@ -3,11 +3,23 @@
  */
 package com.reading.gv009864.advancedcomputing;
 
+import com.reading.gv009864.advancedcomputing.airline.Flight;
 import com.reading.gv009864.advancedcomputing.data.AirportData;
 import com.reading.gv009864.advancedcomputing.data.PassengerData;
 import com.reading.gv009864.advancedcomputing.strings.CSV;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.apache.commons.collections4.ListUtils;
+
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 public class App {
+    private static Logger log = LoggerFactory.getLogger(App.class);
 
     /*
         Create a list of flights based on the Flight ID
@@ -28,5 +40,40 @@ public class App {
 
         AirportData airport = new AirportData(CSV.TOP_30.getClasspath());
         System.out.println(airport.getLines());
+
+        LinkedList<Mapper> mappers = new LinkedList<>();
+
+        // Split data into chunks of 20.
+        List<List<String[]>> data2 = ListUtils.partition(passenger.getLines(), 20);
+
+        // Add a new mapper and run it
+        for(List<String[]> l : data2){
+            mappers.add(new Mapper(l));
+            mappers.getLast().run();
+        }
+
+        try {
+            // I guess try to join all the Threaded mappers.
+            for(Mapper m : mappers)
+                m.join();
+        }
+        catch (InterruptedException e)
+        {
+            log.error(e.getLocalizedMessage());
+        }
+
+        // Technically the shuffle part is what I am attempting now
+
+        HashMap<String, Flight> newHashMap = new HashMap<>();
+
+        for(Mapper m : mappers) {
+            System.out.println(m.getHashMap().toString());
+            /*So each mapper has a HashMap<String, Flight>
+             *We want to merge them so the reduce step is trivial*/
+
+        }
+
+        System.out.println("\n" + newHashMap.toString());
+
     }
 }

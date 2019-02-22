@@ -1,8 +1,8 @@
 package com.reading.gv009864.advancedcomputing.data;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -90,12 +90,12 @@ public class CsvData {
         return true;
     }
 
-    protected boolean matcherIterator(Integer dataLengh, String[] data, Pattern[] patterns) {
+    protected boolean matcherIterator(Integer dataLength, String[] data, Pattern[] patterns) {
         Matcher matcher;
 
         //Iterate through each of the elements in the array.
         //Elements should be in the correct order, otherwise this will also fail the validation.
-        for(int i = 0; i < dataLengh; i++) {
+        for(int i = 0; i < dataLength; i++) {
             matcher = patterns[i].matcher(data[i]);
             if(!matcher.matches()) {
                 log.error("Validation error. Value: {} at column {} failed validation.", data[i], i + 1);
@@ -104,5 +104,13 @@ public class CsvData {
         }
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "CsvData{" +
+                "lines=" + lines +
+                ", DELIMITER='" + DELIMITER + '\'' +
+                '}';
     }
 }
