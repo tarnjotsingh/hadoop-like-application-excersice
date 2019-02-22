@@ -1,4 +1,4 @@
-package com.reading.gv009864.advancedcomputing;
+package com.reading.gv009864.advancedcomputing.strings;
 
 public enum Data {
     PASSENGER_DATA("AComp_Passenger_data.csv"),

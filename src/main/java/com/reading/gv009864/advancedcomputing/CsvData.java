@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -25,6 +27,9 @@ public class CsvData {
     protected List<String[]> lines;
     protected final String DELIMITER = ",";
 
+    public List<String[]> getLines() {
+        return lines;
+    }
 
     /**
      * Method for loading passenger data provided the correct classpath is provided.
@@ -83,6 +88,22 @@ public class CsvData {
      * @return boolean value indicating if validation was successful or not.
      */
     protected boolean validateData(String [] data) {
+        return true;
+    }
+
+    protected boolean matcherIterator(Integer dataLengh, String[] data, Pattern[] patterns) {
+        Matcher matcher;
+
+        //Iterate through each of the elements in the array.
+        //Elements should be in the correct order, otherwise this will also fail the validation.
+        for(int i = 0; i < dataLengh; i++) {
+            matcher = patterns[i].matcher(data[i]);
+            if(!matcher.matches()) {
+                log.error("Validation error. Value: {} at column {} failed validation.", data[i], i + 1);
+                return false;
+            }
+        }
+
         return true;
     }
 }

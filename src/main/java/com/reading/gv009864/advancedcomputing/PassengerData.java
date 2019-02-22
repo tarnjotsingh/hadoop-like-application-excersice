@@ -1,13 +1,10 @@
 package com.reading.gv009864.advancedcomputing;
 
+import com.reading.gv009864.advancedcomputing.strings.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.io.IOUtils;
 
-import java.io.*;
 import java.util.List;
-import java.util.LinkedList;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -17,17 +14,13 @@ import java.util.regex.Pattern;
 public class PassengerData extends CsvData{
 
     private Logger log = LoggerFactory.getLogger(PassengerData.class);
-
+    private final Integer DATA_LENGTH = 6;
 
     private PassengerData() {}
 
     public PassengerData(String resourcePath) {
         this.lines = null;
         this.loadFile(resourcePath);
-    }
-
-    public List<String[]> getLines() {
-        return lines;
     }
 
 
@@ -43,7 +36,8 @@ public class PassengerData extends CsvData{
     @Override
     protected boolean validateData(String [] data) {
         // Immediately fail validation if the array does not have 6 elements.
-        if(data.length != 6) {
+        if(data.length != DATA_LENGTH) {
+            log.error("Data only has {} element(s), expected {}", data.length, DATA_LENGTH);
             return false;
         }
         /*
@@ -52,26 +46,15 @@ public class PassengerData extends CsvData{
             https://regexr.com/ using this site to figure out what the
             correct regex is.
          */
-        Pattern passengerId = Pattern.compile("[A-Z]{3}\\d{4}[A-Z]{2}\\d"); // XXXnnnnXXn
-        Pattern flightId =    Pattern.compile("[A-Z]{3}\\d{4}[A-Z]");       // XXXnnnnX
-        Pattern airportCode = Pattern.compile("[A-Z]{3}");                  // XXX third and fourth elements
-        Pattern epochTime =   Pattern.compile("\\d{10}");                   // n[10]
-        Pattern flightTime =  Pattern.compile("\\d{1,4}");                  // n[1..4]
+        Pattern[] patterns = {
+                Validator.PASSENGER_ID.getPattern(),
+                Validator.FLIGHT_ID.getPattern(),
+                Validator.AIRPORT_CODE.getPattern(),
+                Validator.AIRPORT_CODE.getPattern(),
+                Validator.EPOCH_TIME.getPattern(),
+                Validator.FLIGHT_TIME.getPattern()
+        };
 
-        // Simple array to iterate through, should use a list I guess but this will do.
-        Pattern[] patterns = {passengerId, flightId, airportCode, airportCode, epochTime, flightTime};
-        Matcher matcher;
-
-        //Iterate through each of the elements in the array.
-        //Elements should be in the correct order, otherwise this will also fail the validation.
-        for(int i = 0; i < 6; i++) {
-            matcher = patterns[i].matcher(data[i]);
-            if(!matcher.matches()) {
-                log.error("Validation error. Value: {} at column {} failed validation.", data[i], i + 1);
-                return false;
-            }
-        }
-
-        return true;
+        return this.matcherIterator(DATA_LENGTH, data, patterns);
     }
 }
