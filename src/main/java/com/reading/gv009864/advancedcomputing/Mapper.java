@@ -76,8 +76,5 @@ public class Mapper extends Thread {
                 this.hashMap.get(s[1]).addPassenger(s[0]);
             }
         }
-
-
-
     }
 }

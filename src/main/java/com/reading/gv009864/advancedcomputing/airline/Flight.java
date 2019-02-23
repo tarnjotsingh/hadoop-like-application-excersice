@@ -1,7 +1,11 @@
 package com.reading.gv009864.advancedcomputing.airline;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 public class Flight {
@@ -78,6 +82,18 @@ public class Flight {
         this.passengers.add(passengerId);
     }
 
+    public void addPassengers(List<String> passengers) {
+        this.passengers.addAll(passengers);
+    }
+
+    public Flight mergePassengers(List<String> passengers) {
+        this.addPassengers(passengers);
+        return this;
+    }
+
+    public void checkAndRemoveDuplicates() {
+        this.passengers = Lists.newLinkedList(Sets.newHashSet(this.passengers));
+    }
 
     @Override
     public boolean equals(Object o) {

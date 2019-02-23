@@ -44,7 +44,7 @@ public class App {
         LinkedList<Mapper> mappers = new LinkedList<>();
 
         // Split data into chunks of 20.
-        List<List<String[]>> data2 = ListUtils.partition(passenger.getLines(), 20);
+        List<List<String[]>> data2 = ListUtils.partition(passenger.getLines(), 5);
 
         // Add a new mapper and run it
         for(List<String[]> l : data2){
@@ -62,18 +62,27 @@ public class App {
             log.error(e.getLocalizedMessage());
         }
 
-        // Technically the shuffle part is what I am attempting now
+        /* Technically the shuffle part is what I am attempting now
+         * Just need to map the Passenger lists somehow. */
 
         HashMap<String, Flight> newHashMap = new HashMap<>();
 
+        // Merge all of the HashMaps into a single HashMap.
         for(Mapper m : mappers) {
             System.out.println(m.getHashMap().toString());
             /*So each mapper has a HashMap<String, Flight>
-             *We want to merge them so the reduce step is trivial*/
-
+             *We want to merge them so the reduce step is trivial#
+             *
+             * Iterate with .forEach and merge to the newHashMap*/
+            m.getHashMap().entrySet()
+                    .forEach(entry -> newHashMap.merge(
+                            entry.getKey(),
+                            entry.getValue(),
+                            (v1, v2) -> v1.mergePassengers(v2.getPassengers())
+                    ));
         }
 
-        System.out.println("\n" + newHashMap.toString());
 
+        System.out.println("\n" + newHashMap.toString());
     }
 }
