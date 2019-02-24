@@ -18,6 +18,7 @@ public class Reducer {
 
     private HashMap<String, Flight> passengerMap;
     private HashMap<String, Airport> airportHashMap;
+    private HashMap<String, Double> flightDistances;    // Create a new hash map to store the calculated distances
 
     private Reducer() { }
 
@@ -25,6 +26,7 @@ public class Reducer {
             , HashMap<String, Airport> airportHashMap) {
         this.passengerMap = passengerMap;
         this.airportHashMap = airportHashMap;
+        this.flightDistances = new HashMap<>();
     }
 
     /**
@@ -104,6 +106,56 @@ public class Reducer {
         return builder.toString();
     }
 
+    public String getDistances() {
+        StringBuilder builder = new StringBuilder();
+
+        return "";
+    }
 
 
+    public void calculateDistances() {
+        this.passengerMap.forEach(
+                (key, value) -> {
+                    Airport a = this.airportHashMap.get(value.getSrcAirportCode());
+                    Airport b = this.airportHashMap.get(value.getDestAirportCode());
+                    this.flightDistances.put(
+                            key,
+                            distance(
+                                    a.getLatitude(), a.getLongitude(),
+                                    b.getLatitude(), b.getLongitude(), "M")
+                            );
+                }
+        );
+    }
+
+    /**
+     * Code from : https://www.geodatasource.com/developers/java
+     *
+     * Calculate the distance traveled by each flight.
+     * @param lat1
+     * @param lon1
+     * @param lat2
+     * @param lon2
+     * @param unit
+     * @return
+     */
+    private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+        // No point in continuing if the two values pairs are the same
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        }
+        else {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            if (unit == "K") {
+                dist = dist * 1.609344;
+            } else if (unit == "N") {
+                dist = dist * 0.8684;
+            }
+            return (dist);
+        }
+    }
 }
