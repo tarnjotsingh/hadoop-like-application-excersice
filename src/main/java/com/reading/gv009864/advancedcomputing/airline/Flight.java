@@ -3,6 +3,7 @@ package com.reading.gv009864.advancedcomputing.airline;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,8 +13,9 @@ public class Flight {
 
     private String id;
     private String srcAirportCode;      // Airport IATA/FAA code
-    private String destAiportCode;      // Airport IATA/FAA code
+    private String destAirportCode;      // Airport IATA/FAA code
     private Date departTime;            // From epoch time
+    private SimpleDateFormat dateFormat;
     private Long totalFlightTime;
     private LinkedList<String> passengers;
 
@@ -21,11 +23,12 @@ public class Flight {
     // Private default constructor
     private Flight() {}
 
-    public Flight(String flightId, String srcAirportCode, String destAiportCode, String departTime, String totalFlightTime) {
+    public Flight(String flightId, String srcAirportCode, String destAirportCode, String departTime, String totalFlightTime) {
         this.id = flightId;
         this.srcAirportCode = srcAirportCode;
-        this.destAiportCode = destAiportCode;
+        this.destAirportCode = destAirportCode;
         this.departTime = new Date(Long.parseLong(departTime) * 1000);  // Convert epoch time to date object
+        this.dateFormat= new SimpleDateFormat("kk:mm:ss");
         this.totalFlightTime = Long.parseLong(totalFlightTime);
         passengers = new LinkedList<>();
     }
@@ -34,48 +37,28 @@ public class Flight {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getSrcAirportCode() {
         return srcAirportCode;
     }
 
-    public void setSrcAirportCode(String srcAirportCode) {
-        this.srcAirportCode = srcAirportCode;
-    }
-
-    public String getDestAiportCode() {
-        return destAiportCode;
-    }
-
-    public void setDestAiportCode(String destAiportCode) {
-        this.destAiportCode = destAiportCode;
+    public String getDestAirportCode() {
+        return destAirportCode;
     }
 
     public Date getDepartTime() {
         return departTime;
     }
 
-    public void setDepartTime(Date departTime) {
-        this.departTime = departTime;
+    public String getFormattedDepartTime() {
+        return this.dateFormat.format(this.departTime);
     }
 
     public Long getTotalFlightTime() {
         return totalFlightTime;
     }
 
-    public void setTotalFlightTime(Long totalFlightTime) {
-        this.totalFlightTime = totalFlightTime;
-    }
-
     public LinkedList<String> getPassengers() {
         return passengers;
-    }
-
-    public void setPassengers(LinkedList<String> passengers) {
-        this.passengers = passengers;
     }
 
     public void addPassenger(String passengerId) {
@@ -91,10 +74,6 @@ public class Flight {
         return this;
     }
 
-    public void checkAndRemoveDuplicates() {
-        this.passengers = Lists.newLinkedList(Sets.newHashSet(this.passengers));
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,7 +81,7 @@ public class Flight {
         Flight flight = (Flight) o;
         return Objects.equals(id, flight.id) &&
                 Objects.equals(srcAirportCode, flight.srcAirportCode) &&
-                Objects.equals(destAiportCode, flight.destAiportCode) &&
+                Objects.equals(destAirportCode, flight.destAirportCode) &&
                 Objects.equals(departTime, flight.departTime) &&
                 Objects.equals(totalFlightTime, flight.totalFlightTime) &&
                 Objects.equals(passengers, flight.passengers);
@@ -110,7 +89,7 @@ public class Flight {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, srcAirportCode, destAiportCode, departTime, totalFlightTime, passengers);
+        return Objects.hash(id, srcAirportCode, destAirportCode, departTime, totalFlightTime, passengers);
     }
 
     @Override
@@ -118,10 +97,9 @@ public class Flight {
         return "Flight{" +
                 "id='" + id + '\'' +
                 ", srcAirportCode='" + srcAirportCode + '\'' +
-                ", destAiportCode='" + destAiportCode + '\'' +
-                ", departTime=" + departTime +
+                ", destAirportCode='" + destAirportCode + '\'' +
+                ", departTime=" + this.getFormattedDepartTime() +
                 ", totalFlightTime=" + totalFlightTime +
-                ", passengers=" + passengers +
                 '}';
     }
 }

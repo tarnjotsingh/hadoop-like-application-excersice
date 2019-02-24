@@ -3,9 +3,13 @@
  */
 package com.reading.gv009864.advancedcomputing;
 
+import com.reading.gv009864.advancedcomputing.airline.Airport;
 import com.reading.gv009864.advancedcomputing.airline.Flight;
 import com.reading.gv009864.advancedcomputing.data.AirportData;
 import com.reading.gv009864.advancedcomputing.data.PassengerData;
+import com.reading.gv009864.advancedcomputing.mapper.AirportMapper;
+import com.reading.gv009864.advancedcomputing.mapper.PassengerMapper;
+import com.reading.gv009864.advancedcomputing.reducer.Reducer;
 import com.reading.gv009864.advancedcomputing.strings.CSV;
 
 import org.slf4j.Logger;
@@ -21,14 +25,12 @@ import java.util.List;
 public class App {
     private static Logger log = LoggerFactory.getLogger(App.class);
 
-    /*
+    /**
         Create a list of flights based on the Flight ID
         Output should include passenger ID
         <key, List<value>>
         <FlightId, List<data>>
      */
-
-
     public static void main(String[] args) {
         // I guess the first thing to do would be to take the data in and read it before carrying on
         // Need to Map the input data to key value pairs
@@ -36,44 +38,56 @@ public class App {
 
         // Lets take the AComp_passenger_data_no_error to figure out how we want to do the key value thing mapping thing
         PassengerData passenger = new PassengerData(CSV.PASSENGER_DATA.getClasspath());
-        System.out.println(passenger.getLines());
-
         AirportData airport = new AirportData(CSV.TOP_30.getClasspath());
-        System.out.println(airport.getLines());
+        LinkedList<PassengerMapper> mappers = new LinkedList<>();
+        LinkedList<AirportMapper> airportMappers = new LinkedList<>();
+        HashMap<String, Flight> newHashMap;
+        HashMap<String, Airport> airportHashMap;
+        Reducer reducer = null;
 
-        LinkedList<Mapper> mappers = new LinkedList<>();
-
-        // Split data into chunks of 20.
-        List<List<String[]>> data2 = ListUtils.partition(passenger.getLines(), 5);
-
-        // Add a new mapper and run it
-        for(List<String[]> l : data2){
-            mappers.add(new Mapper(l));
+        // Split data into chunks of the specified size
+        List<List<String[]>> passengerData = ListUtils.partition(passenger.getLines(), 20);
+        List<List<String[]>> airportData = ListUtils.partition(airport.getLines(), 5);
+        // Create n number of mappers depending on number of partitions made.
+        for(List<String[]> l : passengerData){
+            mappers.add(new PassengerMapper(l));
+            mappers.getLast().run();
+        }
+        // Do the same for airport data
+        for(List<String[]> l : airportData){
+            airportMappers.add(new AirportMapper(l));
             mappers.getLast().run();
         }
 
         try {
-            // I guess try to join all the Threaded mappers.
-            for(Mapper m : mappers)
+            // Wait for all threads to finish before continuing.
+            for(PassengerMapper m : mappers)
+                m.join();
+            for(AirportMapper m : airportMappers)
                 m.join();
         }
-        catch (InterruptedException e)
-        {
+        catch (InterruptedException e) {
             log.error(e.getLocalizedMessage());
+            // Kill code execution if something went wrong with any of the threads.
+            return;
         }
 
-        /* Technically the shuffle part is what I am attempting now
-         * Just need to map the Passenger lists somehow. */
+        /* Technically the shuffle part is what is being attempting now
+         * Just need to merge the Passenger lists somehow. */
+        newHashMap = new HashMap<>();
+        airportHashMap = new HashMap<>();
 
-        HashMap<String, Flight> newHashMap = new HashMap<>();
-
-        // Merge all of the HashMaps into a single HashMap.
-        for(Mapper m : mappers) {
-            System.out.println(m.getHashMap().toString());
+        /* Merge all of the HashMaps into a single HashMap by iterating
+         * through each of the mappers and merging the contents to newHashMap */
+        for(PassengerMapper m : mappers) {
+            //System.out.println(m.getHashMap().toString());
             /*So each mapper has a HashMap<String, Flight>
-             *We want to merge them so the reduce step is trivial#
+             *We want to merge them so the reduce step is trivial.
              *
-             * Iterate with .forEach and merge to the newHashMap*/
+             * Iterate with .forEach and merge to the newHashMap
+             * In the merge, v1 and v2 represent a Hash value in
+             * the newHashMap and HashMap from the current mapper
+             * respectively */
             m.getHashMap().entrySet()
                     .forEach(entry -> newHashMap.merge(
                             entry.getKey(),
@@ -82,7 +96,21 @@ public class App {
                     ));
         }
 
+        for(AirportMapper m : airportMappers) {
+            /* For airport data, need to a similar thing really
+            *  though no data needs to be merged as there shouldn't be
+            *  any duplicate. Data reading and mapping state serve as two
+            *  blockades for any duplicate data. Makes this step pretty
+            *  straightforward. */
+            airportHashMap.putAll(m.getHashMap());
+        }
+        //System.out.println("\n" + newHashMap.toString());
 
-        System.out.println("\n" + newHashMap.toString());
+        // Now to need to do the reduce step now to finish the assignment!
+
+        reducer = new Reducer(newHashMap, airportHashMap);
+
+        System.out.println(reducer.getListOfFlights());                     // Create a list of flights based on the Flight id.
+        System.out.println(reducer.getNumOfPassengersForEachFlight());      // Calculate the number of passengers on each flight.
     }
 }

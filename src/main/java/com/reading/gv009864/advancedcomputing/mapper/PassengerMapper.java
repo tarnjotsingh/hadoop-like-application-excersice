@@ -1,4 +1,4 @@
-package com.reading.gv009864.advancedcomputing;
+package com.reading.gv009864.advancedcomputing.mapper;
 
 import com.reading.gv009864.advancedcomputing.airline.Flight;
 
@@ -9,18 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Mapper class which is threaded to run map jobs
+ * PassengerMapper class which is threaded to run map jobs
  * in parallel to one another.
  * Will produce a Hash map of KeyValue pairs.
  *
  */
-public class Mapper extends Thread {
-    private Logger log = LoggerFactory.getLogger(Mapper.class);
+public class PassengerMapper extends Thread {
+    private Logger log = LoggerFactory.getLogger(PassengerMapper.class);
 
     private List<String[]> data;
     private HashMap<String, Flight> hashMap;    // KeyValue pair of HashMap<FlightId, Flight>
 
-    public Mapper(List<String[]> data) {
+    public PassengerMapper(List<String[]> data) {
         this.data = data;
         this.hashMap = new HashMap<>();
     }
