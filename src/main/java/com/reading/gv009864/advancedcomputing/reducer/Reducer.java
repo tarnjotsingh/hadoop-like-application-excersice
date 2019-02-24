@@ -24,15 +24,45 @@ public class Reducer {
     public Reducer(HashMap<String, Flight> passengerMap
             , HashMap<String, Airport> airportHashMap) {
         this.passengerMap = passengerMap;
+        this.airportHashMap = airportHashMap;
     }
 
     /**
-     * To check which airports have and have not been used
-     * the passengerM
-     * @return
+     * To check which airports have and have not been used, can iterate through each
+     * element of the passenger HashMap and then use the airport key to find out if
+     * the airport has been used. Increment the in-object value to signify this.
+     *
+     * @return String listing each airport code with the number of times they were used as a
+     * source airport for a flight. This means even if they were used as a destination, the value
+     * cannot be increased.
      */
-    public String getAirportsUsed() {
-        return "";
+    public String getSrcAirportsUsed() {
+        StringBuilder builder = new StringBuilder();
+
+        /*
+         * An assumption being made here is that values in the passenger hash map use a
+         * subset of the values in the airport hash map.
+         *
+         * Therefore if an airport is not found, an error will have to be thrown since the
+         * data for that airport is not available.
+         */
+        this.passengerMap.forEach(
+                (key, value) -> {
+                    try {
+                        airportHashMap.get(value.getSrcAirportCode()).incrementNumOfFlightsFrom();
+                    }
+                    catch(Exception e) {
+                        log.error(e.getLocalizedMessage());
+                        log.error(value.getSrcAirportCode() + " airport not found.");
+                    }
+                }
+        );
+
+        this.airportHashMap.forEach(
+                (key, value) -> builder.append(key + " : " + value.getNumOfFlightsFrom() + System.lineSeparator())
+        );
+
+        return builder.toString();
     }
 
     /**

@@ -56,7 +56,7 @@ public class App {
         // Do the same for airport data
         for(List<String[]> l : airportData){
             airportMappers.add(new AirportMapper(l));
-            mappers.getLast().run();
+            airportMappers.getLast().run();
         }
 
         try {
@@ -96,21 +96,24 @@ public class App {
                     ));
         }
 
+        /*
+         * For airport data, need to a similar thing really
+         * though no data needs to be merged as there shouldn't be
+         * any duplicate. Data reading and mapping state serve as two
+         * blockades for any duplicate data. Makes this step pretty
+         * straightforward.
+         */
         for(AirportMapper m : airportMappers) {
-            /* For airport data, need to a similar thing really
-            *  though no data needs to be merged as there shouldn't be
-            *  any duplicate. Data reading and mapping state serve as two
-            *  blockades for any duplicate data. Makes this step pretty
-            *  straightforward. */
             airportHashMap.putAll(m.getHashMap());
         }
-        //System.out.println("\n" + newHashMap.toString());
 
         // Now to need to do the reduce step now to finish the assignment!
 
         reducer = new Reducer(newHashMap, airportHashMap);
 
+        System.out.println(reducer.getSrcAirportsUsed());                    // Determine the number of flights **from** each airport; include a list of any airports not used.
         System.out.println(reducer.getListOfFlights());                     // Create a list of flights based on the Flight id.
         System.out.println(reducer.getNumOfPassengersForEachFlight());      // Calculate the number of passengers on each flight.
+        // Calculate number of nautical miles done by each passenger
     }
 }

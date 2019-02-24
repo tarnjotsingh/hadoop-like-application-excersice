@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AirportMapper extends Thread {
-    private static Logger log = LoggerFactory.getLogger(App.class);
+    private static Logger log = LoggerFactory.getLogger(AirportMapper.class);
 
     private List<String[]> airportData;
     private HashMap<String, Airport> hashMap;
@@ -27,15 +27,16 @@ public class AirportMapper extends Thread {
         super.run();
         for(String[] s : this.airportData) {
             // Kill the run job if somehow the data is not of the correct size.
-            if(s.length != 6) {
+            if(s.length != 4) {
                 log.error("Loaded data entry is of incorrect size. Expected {}, found {}.", 4, this.airportData.size());
                 return;
             }
             // First check if a flight KeyValue pair already exists.
             // If it does, ignore it because we cannot have duplicate airport entries.
-            if(this.hashMap.get(s[0]) == null){
+            // Use the airport code as the key.
+            if(this.hashMap.get(s[1]) == null){
                 this.hashMap.put(
-                        s[0],
+                        s[1],
                         new Airport(s[0], s[1], s[2], s[3])
                 );
             }
