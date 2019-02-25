@@ -111,9 +111,9 @@ public class App {
 
         reducer = new Reducer(newHashMap, airportHashMap);
 
-        System.out.println(reducer.getSrcAirportsUsed());                    // Determine the number of flights **from** each airport; include a list of any airports not used.
+        System.out.println(reducer.getSrcAirportsUsed());                   // Determine the number of flights **from** each airport; include a list of any airports not used.
         System.out.println(reducer.getListOfFlights());                     // Create a list of flights based on the Flight id.
         System.out.println(reducer.getNumOfPassengersForEachFlight());      // Calculate the number of passengers on each flight.
-        // Calculate number of nautical miles done by each passenger
+        System.out.println(reducer.getDistances());                         // Calculate number of nautical miles done by each passenger
     }
 }

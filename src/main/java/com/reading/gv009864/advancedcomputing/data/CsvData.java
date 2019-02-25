@@ -82,6 +82,7 @@ public class CsvData {
 
         //Using toMap collector to provide a keyMapper function that serves as a test for duplicates based on the passenger ID.
         //https://stackoverflow.com/questions/52148400/remove-duplicates-from-a-list-of-string-array
+        //This will use the first element as a key and the currently selected element as the value for mapping
         this.lines = new LinkedList<>(
                 data.stream().collect(Collectors.toMap(arr -> arr[0], Function.identity(),
                 (a, b) -> a)).values());

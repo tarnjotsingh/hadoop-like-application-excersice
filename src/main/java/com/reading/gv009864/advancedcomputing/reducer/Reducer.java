@@ -5,7 +5,11 @@ import com.reading.gv009864.advancedcomputing.airline.Flight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This Reducer class has the responsibility of resolving final values from
@@ -18,7 +22,7 @@ public class Reducer {
 
     private HashMap<String, Flight> passengerMap;
     private HashMap<String, Airport> airportHashMap;
-    private HashMap<String, Double> flightDistances;    // Create a new hash map to store the calculated distances
+    private LinkedHashMap<String, Double> flightDistances;    // Create a new linked hash map to store the calculated distances
 
     private Reducer() { }
 
@@ -26,7 +30,7 @@ public class Reducer {
             , HashMap<String, Airport> airportHashMap) {
         this.passengerMap = passengerMap;
         this.airportHashMap = airportHashMap;
-        this.flightDistances = new HashMap<>();
+        this.flightDistances = new LinkedHashMap<>();   // Linked hash map lets the order be maintaned
     }
 
     /**
@@ -39,6 +43,7 @@ public class Reducer {
      * cannot be increased.
      */
     public String getSrcAirportsUsed() {
+        log.info("Getting number of times an airport was used as a source.");
         StringBuilder builder = new StringBuilder();
 
         /*
@@ -75,6 +80,7 @@ public class Reducer {
      * @return
      */
     public String getListOfFlights() {
+        log.info("Getting list of flights.");
         StringBuilder builder = new StringBuilder();
 
         log.info("Processing flight information list...");
@@ -94,6 +100,7 @@ public class Reducer {
      * @return String that can be printed out to show the values for each flight.
      */
     public String getNumOfPassengersForEachFlight() {
+        log.info("Getting number of passengers for each flight.");
         StringBuilder builder = new StringBuilder();
 
         log.info("Processing number of passengers...");
@@ -106,10 +113,35 @@ public class Reducer {
         return builder.toString();
     }
 
+    /**
+     * Will return a list of nautical miles covered by each flight
+     *
+     * @return String detailing the nautical miles traveled by each flight.
+     */
     public String getDistances() {
+        log.info("Getting distance (in nautical miles) covered by each flight.");
         StringBuilder builder = new StringBuilder();
+        // Calculate the distances
+        this.calculateDistances();
+        this.sortDistances();
 
-        return "";
+
+        this.flightDistances.forEach(
+                (key, value) -> {
+                    Flight f = this.passengerMap.get(key);
+                    builder.append(
+                            "FlightId: " + key + System.lineSeparator() +
+                            "Nautical Miles: " + value + System.lineSeparator() +
+                            "Passengers: " + System.lineSeparator() +
+                                    f.getPassengers().stream()
+                                            .collect(Collectors.joining("\n")) + System.lineSeparator() +
+                            System.lineSeparator()
+                    );
+                }
+        );
+
+
+        return builder.toString();
     }
 
 
@@ -122,10 +154,31 @@ public class Reducer {
                             key,
                             distance(
                                     a.getLatitude(), a.getLongitude(),
-                                    b.getLatitude(), b.getLongitude(), "M")
-                            );
+                                    b.getLatitude(), b.getLongitude(),
+                                    "N"
+                            )
+                    );
                 }
         );
+
+        // Sort the HashMap by value in ascending order
+    }
+
+    private void sortDistances() {
+        // Produce a stream from the current entry set to run sorted and collect
+        // toMap lets us create a new LinkedHashMap from the existing data.
+        // Merge method doesn't need to anything since there won't be two values with the same key
+        LinkedHashMap<String, Double> result = this.flightDistances.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new
+                ));
+
+        this.flightDistances = result;
     }
 
     /**
@@ -139,10 +192,10 @@ public class Reducer {
      * @param unit
      * @return
      */
-    private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+    private Double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
         // No point in continuing if the two values pairs are the same
         if ((lat1 == lat2) && (lon1 == lon2)) {
-            return 0;
+            return 0.0;
         }
         else {
             double theta = lon1 - lon2;
