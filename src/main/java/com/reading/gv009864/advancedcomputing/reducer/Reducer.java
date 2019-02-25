@@ -56,8 +56,14 @@ public class Reducer {
                 this.airportHashMap.entrySet()
                 .stream();
 
-        if(flag) stream = stream.filter(x -> x.getValue().getNumOfFlightsFrom() > 0);
-        else stream = stream.filter(x -> x.getValue().getNumOfFlightsFrom() == 0);
+        if(flag) {
+            log.info("Filtering for airports used once or more as source location for flight.");
+            stream = stream.filter(x -> x.getValue().getNumOfFlightsFrom() > 0);
+        }
+        else {
+            log.info("Filtering for airports never used as source location for flight.");
+            stream = stream.filter(x -> x.getValue().getNumOfFlightsFrom() == 0);
+        }
 
 
         stream.forEach(
@@ -130,7 +136,7 @@ public class Reducer {
                     builder.append(
                             "FlightId: " + key + System.lineSeparator() +
                             "Nautical Miles: " + value + System.lineSeparator() +
-                            "Passengers: " + System.lineSeparator() +
+                            "Passengers: " + f.getPassengers().size() + System.lineSeparator() +
                                     f.getPassengers().stream()
                                             .collect(Collectors.joining("\n")) + System.lineSeparator() +
                             System.lineSeparator()
