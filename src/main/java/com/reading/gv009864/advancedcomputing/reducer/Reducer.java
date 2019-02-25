@@ -2,6 +2,7 @@ package com.reading.gv009864.advancedcomputing.reducer;
 
 import com.reading.gv009864.advancedcomputing.airline.Airport;
 import com.reading.gv009864.advancedcomputing.airline.Flight;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,7 +145,11 @@ public class Reducer {
         return builder.toString();
     }
 
-
+    /**
+     * Helper method for calculating the distances and populating the LinkedHashMap
+     * Key used will be the flightId
+     * Value will be Double representing the nautical miles covered by the flight.
+     */
     public void calculateDistances() {
         this.passengerMap.forEach(
                 (key, value) -> {
@@ -164,6 +169,10 @@ public class Reducer {
         // Sort the HashMap by value in ascending order
     }
 
+    /**
+     * Helper method for sorting the calculated distances in the LinkedHashMap
+     * in descending order.
+     */
     private void sortDistances() {
         // Produce a stream from the current entry set to run sorted and collect
         // toMap lets us create a new LinkedHashMap from the existing data.
@@ -183,14 +192,16 @@ public class Reducer {
 
     /**
      * Code from : https://www.geodatasource.com/developers/java
+     * Method for calculating the distances (based on the unit provided) covered
+     * based on two latitude/longitude pairs. Will be used to calculate the distance
+     * covered by each flight.
      *
-     * Calculate the distance traveled by each flight.
      * @param lat1
      * @param lon1
      * @param lat2
      * @param lon2
-     * @param unit
-     * @return
+     * @param unit "M" for miles, "K" for kilometers, "N" for nautical miles
+     * @return Double returning the distance covered (based on the unit provided) as a double.
      */
     private Double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
         // No point in continuing if the two values pairs are the same
