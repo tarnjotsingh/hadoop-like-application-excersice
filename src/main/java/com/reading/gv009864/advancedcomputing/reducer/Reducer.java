@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This Reducer class has the responsibility of resolving final values from
@@ -32,42 +33,38 @@ public class Reducer {
         this.passengerMap = passengerMap;
         this.airportHashMap = airportHashMap;
         this.flightDistances = new LinkedHashMap<>();   // Linked hash map lets the order be maintaned
+
+        this.processNumOfFlightsFrom();
     }
 
     /**
-     * To check which airports have and have not been used, can iterate through each
-     * element of the passenger HashMap and then use the airport key to find out if
-     * the airport has been used. Increment the in-object value to signify this.
+     * To check which airports have been used, can iterate through each
+     * in the airportHashMap via a stream and filter based on the condition that
+     * the number of times it was used as a source location for a flight.
      *
+     * @param flag boolean value to toggle the filter method used.
+     *             true -> numOfFlightsFrom > 0
+     *             false -> numOfFlightsFrom == 0
      * @return String listing each airport code with the number of times they were used as a
      * source airport for a flight. This means even if they were used as a destination, the value
      * cannot be increased.
      */
-    public String getSrcAirportsUsed() {
-        log.info("Getting number of times an airport was used as a source.");
+    public String getSrcAirportsUsed(Boolean flag) {
+        log.info("Getting number of times an airport was used as a source for a flight.");
         StringBuilder builder = new StringBuilder();
+        Stream<Map.Entry<String,Airport>> stream =
+                this.airportHashMap.entrySet()
+                .stream();
 
-        /*
-         * An assumption being made here is that values in the passenger hash map use a
-         * subset of the values in the airport hash map.
-         *
-         * Therefore if an airport is not found, an error will have to be thrown since the
-         * data for that airport is not available.
-         */
-        this.passengerMap.forEach(
-                (key, value) -> {
-                    try {
-                        airportHashMap.get(value.getSrcAirportCode()).incrementNumOfFlightsFrom();
-                    }
-                    catch(Exception e) {
-                        log.error(e.getLocalizedMessage());
-                        log.error(value.getSrcAirportCode() + " airport not found.");
-                    }
-                }
-        );
+        if(flag) stream = stream.filter(x -> x.getValue().getNumOfFlightsFrom() > 0);
+        else stream = stream.filter(x -> x.getValue().getNumOfFlightsFrom() == 0);
 
-        this.airportHashMap.forEach(
-                (key, value) -> builder.append(key + " : " + value.getNumOfFlightsFrom() + System.lineSeparator())
+
+        stream.forEach(
+                x -> builder.append(
+                        x.getKey() + " : " +
+                        x.getValue().getAirportName() + " : " +
+                        x.getValue().getNumOfFlightsFrom() + System.lineSeparator())
         );
 
         return builder.toString();
@@ -145,12 +142,39 @@ public class Reducer {
         return builder.toString();
     }
 
+
+
+    /**
+     * Helper method to update the airport objects with the number
+     * of times they were used as a source for a flight.
+     */
+    private void processNumOfFlightsFrom() {
+        /*
+         * An assumption being made here is that values in the passenger hash map use a
+         * subset of the values in the airport hash map.
+         *
+         * Therefore if an airport is not found, an error will have to be thrown since the
+         * data for that airport is not available.
+         */
+        this.passengerMap.forEach(
+                (key, value) -> {
+                    try {
+                        airportHashMap.get(value.getSrcAirportCode()).incrementNumOfFlightsFrom();
+                    }
+                    catch(Exception e) {
+                        log.error(e.getLocalizedMessage());
+                        log.error(value.getSrcAirportCode() + " airport not found.");
+                    }
+                }
+        );
+    }
+
     /**
      * Helper method for calculating the distances and populating the LinkedHashMap
      * Key used will be the flightId
      * Value will be Double representing the nautical miles covered by the flight.
      */
-    public void calculateDistances() {
+    private void calculateDistances() {
         this.passengerMap.forEach(
                 (key, value) -> {
                     Airport a = this.airportHashMap.get(value.getSrcAirportCode());
