@@ -6,10 +6,11 @@ import com.reading.gv009864.advancedcomputing.airline.Flight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Comparator;
+
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -101,6 +102,9 @@ public class Reducer {
      * produce a string that can display the Key (flight id) and the number of
      * passengers for each flight.
      *
+     * String produced will be in descending order the values based on the
+     * passenger count.
+     *
      * @return String that can be printed out to show the values for each flight.
      */
     public String getNumOfPassengersForEachFlight() {
@@ -109,9 +113,13 @@ public class Reducer {
 
         log.info("Processing number of passengers...");
 
-        this.passengerMap.forEach(
-                (key, value) -> builder.append(
-                        key + " : " + value.getPassengers().size() + System.lineSeparator())
+        this.passengerMap.entrySet()
+                .stream()
+                .sorted(Comparator.comparing(
+                        a-> a.getValue().getPassengers().size(),
+                        Comparator.reverseOrder()))
+                .forEach( a -> builder.append(
+                        a.getKey() + " : " + a.getValue().getPassengers().size() + System.lineSeparator())
         );
 
         return builder.toString();
