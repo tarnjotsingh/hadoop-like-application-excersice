@@ -1,10 +1,13 @@
 ---
 title: Advanced computing report
 author: gv009864
-output: pdf_document
+output: 
+	pdf_document:
+		number_sections: yes
 geometry: margin=1.5cm
 
 ---
+\newpage
 
 ## Introduction
 
@@ -47,7 +50,6 @@ The distinct stages implemented are:
 
 * Reducer will consume HashMaps for passenger and airport data, then evaluate results from that data.
 
-
 ## Version Control process
 
 Git was used as the version control system for this project. The university GitLab was used to host the repository for this project.
@@ -56,38 +58,21 @@ Link to the CS-GitLab repository: <https://csgitlab.reading.ac.uk/gv009864/advan
 
 ### Commands used to commit and push changes to the repository
 
-#### Setting up the git project
-
 1. After setting up the Gradle project, ```git init``` was used in root directory to initialise it as a git project.
 
 2. Set up the project to use the newly created repository on CS-GitLab: 
 
 	```git remote add origin https://csgitlab.reading.ac.uk/gv009864/project.git```
 
-3. Create an initial commit for the current project so that they are pushed to the remote server in the next step: 
-	* ```git add *``` 
+3. Check the status of the project to see what state files in the project are in:
+	* ```git status```
+
+3. Add files to staging with and commit those changes locally to save them:
+	* ```git add *``` or ```git add _filename_```
 	* ```git commit -m "First commit"```
 
-4. Since it is the first commit: 
-	* ```git push -u origin --all```
-	* ```git push -u origin --tags```
-
-#### Every other commit
-
-1. Using ```git status``` and ```git diff``` to check the changes made since the last commit/status of the last point a file was added to be tracked. Review the status and the diff to confirm the changes made.
-
-2. Add everything or just the files to add to staging/to be tracked.
-	* ```git add *``` or ```git add _filename_```
-
-3. Using ```git status``` and ```git diff``` again to check to ensure everything has been added, check for any other changes made. Using ```git add _filename_``` where appropriate.
-
-4. Once happy with what is has been added to staging, commit the files into a local commit. using ```git commit``` or ```git commit -m "message"```.
-	* Using meaningful commit messages is always best practice to track progress made on each commit and makes it easier for others to see what has been done. In a professional environment, use of references to other tickets would be used but is not possible for this assignment. 
-
-5. Once ready to push all local commits to the remote server that has been assigned to the git project. Use ```git push```. 
-	* Since https was used over ssh,CS-GitLab credentials are required to complete the process.
-	* Once the push has been completed, go to repository in the web browser to check that the push was successful.
-
+4. Push any local commits and provide credentials as https is being used: 
+	* ```git push```
 
 ## Detailed description of the MapReduce functions being replicated
 
@@ -123,7 +108,6 @@ for(List<String[]> l : airportData){
 In the PassengerMapper, the following approach was taken to create the KeyValue pairs. In the for each loop, _s_ represents a line parsed from the passenger csv data file. The data is expected to be of 6 elements, in size. If for some reason that the validation did not catch this, a check here ensures that the line is not processed by skipping to the next iteration.
 
 A check is then done to see an element in the HashMap already exists with the desired key (the flightID). If the element is found, then a new passenger can be added under the flight object which is assigned as the value. If nothing is associated with the desired key (i.e. null) then a new HashMap entry can be created from the currently selected line _s_.
-
 
 ```java
 @Override
@@ -324,7 +308,7 @@ this.lines = new LinkedList<>(
 
 ## The output format of any reports that each job produces
 
-A full output from the execution of the application can be found in the Git repository.
+A full output from the execution of the application under ```Output.md``` can be found in root directory of the Git repository. 
 
 ### Number of flights from each airport
 
@@ -353,7 +337,6 @@ Full list of the number of flights from each airport with the airport code and a
 	HND : TOKYO : 1
 	LAS : LAS VEGAS : 1
 
-	
 	LAX : LOS ANGELES : 0
 	SFO : SAN FRANCISCO : 0
 	PHX : PHOENIX : 0
@@ -362,7 +345,6 @@ Full list of the number of flights from each airport with the airport code and a
 	DXB : DUBAI : 0
 	FRA : FRANKFURT : 0
 	SIN : SINGAPORE : 0
-
 
 ### List of flights 
 
@@ -374,7 +356,6 @@ Full list of the number of flights from each airport with the airport code and a
 	{id='VYW5940P', srcAirportCode='LAS', destAirportCode='SIN', departTime=17:26:43, totalFlightTime=1843}
 	...
 
-
 ### Number of passengers on each flight
 
 Number of passengers on each flight in descending order.
@@ -382,16 +363,12 @@ Number of passengers on each flight in descending order.
 	XXQ4064B : 19
 	ULZ8130D : 18
 	WSK1289Z : 17
-	GMO5938W : 17
-	JVY9791G : 17
-	KJR6646J : 15
-	SQU6245R : 15
-	YZO4444S : 15
-	FYL5866L : 14
-	XOY7948U : 14
-	PME8178S : 14
 	...
-
+	XIL3623J : 9
+	WPW9201U : 8
+	HUR0974O : 6
+	EWH6301Y : 6
+	PNE8178S : 1
 
 ### Nautical miles covered by passengers
 
@@ -418,9 +395,12 @@ List of each flight, with the passengers, with the nautical miles covered. Outpu
 	BWI0521BG0
 	...
 
-
-
 ## Self-appraisal 
 
+I have quite enjoyed doing this assignment as it has allowed me to create some interesting code. Implementing a non-MapReduce prototype has given me a better understanding of how Hadoop's MapReduce function underlying code actually works. Though, not a perfect solution by any means, this prototype still implements the three distinct steps that MapReduce provides. 
 
-asdf
+After writing this report, I feel that all the validation code should be moved from the parsing stage and into the mapping stage. Reason being is that this can help vastly increase performance especially when you consider the affect larger data sets can have to performance.
+
+It is hard to gauge how well the code work with much bigger data how well it could potentially scale without the data. I feel that some steps, such as the reduce functions that rely on using streams, don't take advantage of extra parallelisation. Though I cannot imagine it being too difficult to modify in order to take advantage of this if given the time to do so.
+
+I think it would be really interesting to see if there is a way to generate a larger data set and see how well this implementation would work with a data set size that is more typical to see in industry.
