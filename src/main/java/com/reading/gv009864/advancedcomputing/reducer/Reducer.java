@@ -66,7 +66,6 @@ public class Reducer {
             stream = stream.filter(x -> x.getValue().getNumOfFlightsFrom() == 0);
         }
 
-
         stream.forEach(
                 x -> builder.append(
                         x.getKey() + " : " +

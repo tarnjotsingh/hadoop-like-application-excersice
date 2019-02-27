@@ -26,9 +26,9 @@ public class AirportMapper extends Thread {
     public void run() {
         super.run();
         for(String[] s : this.airportData) {
-            // Kill the run job if somehow the data is not of the correct size.
+            // Skip the line if somehow the data is not of the correct size.
             if(s.length != 4) {
-                log.error("Loaded data entry is of incorrect size. Expected {}, found {}.", 4, this.airportData.size());
+                log.error("Loaded data entry is of incorrect size. Expected {}, found {}.", 4, s.length);
                 return;
             }
             // First check if a flight KeyValue pair already exists.
