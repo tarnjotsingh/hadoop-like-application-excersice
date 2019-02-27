@@ -29,6 +29,8 @@ Hadoop's MapReduce uses three main stages in order to process data: mapping, shu
 
 The prototype being developed in this assignment aims to focus on creating the Mapper, Shuffler and Reducer components that are able to process the csv data provided. Where Hadoop aims to run on clusters, this prototype is designed to just work on the system it is being run on as there is no requirement to include this feature. 
 
+The 
+
 
 ## Version Control process
 
@@ -59,7 +61,7 @@ Link to the CS-GitLab repository: <https://csgitlab.reading.ac.uk/gv009864/advan
 2. Add everything or just the files to add to staging/to be tracked.
 	* ```git add *``` or ```git add _filename_```
 
-3. Using ```git status``` and ```git diff``` again to check to ensure everything has been added, check for any other changes made. Using ```git add _filenam_``` where appropriate.
+3. Using ```git status``` and ```git diff``` again to check to ensure everything has been added, check for any other changes made. Using ```git add _filename_``` where appropriate.
 
 4. Once happy with what is has been added to staging, commit the files into a local commit. using ```git commit``` or ```git commit -m "message"```.
 	* Using meaningful commit messages is always best practice to track progress made on each commit and makes it easier for others to see what has been done. In a professional environment, use of references to other tickets would be used but is not possible for this assignment. 
@@ -69,8 +71,28 @@ Link to the CS-GitLab repository: <https://csgitlab.reading.ac.uk/gv009864/advan
 	* Once the push has been completed, go to repository in the web browser to check that the push was successful.
 
 
-## Method
+## Detailed description of the MapReduce functions being replicated
 
+asdf
+
+
+## The output format of any reports that each job produces
+
+
+asdf
+
+
+## Error handling strategy 
+
+
+asdf
+
+
+
+## Self-appraisal 
+
+
+asdf
 
 
 
